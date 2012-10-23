@@ -7,6 +7,8 @@
 //
 
 #import "LSAppDelegate.h"
+#import "LSHomeViewController.h"
+#import "QuartzCore/QuartzCore.h"
 
 @implementation LSAppDelegate
 
@@ -16,10 +18,38 @@
     [super dealloc];
 }
 
+
+
+- (void) startMainWindow {
+    //PRINT_CMD
+    self.window.backgroundColor = [UIColor clearColor];
+    UIViewController *homeController = [[LSHomeViewController alloc] init ] ;
+    
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:homeController];
+    UIImage *barImage = [UIImage imageNamed:@"navigation_bar.png"];
+    
+    if( [nav.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)] ) {
+        [nav.navigationBar setBackgroundImage:barImage forBarMetrics:UIBarMetricsDefault];
+    } else {
+        nav.navigationBar.layer.contents = (id) barImage.CGImage;
+    }
+    
+    nav.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background.png"]];
+    self.navigationController = nav;
+    
+    [homeController release];
+    [nav release];
+    
+    [self.window setRootViewController:self.navigationController];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
+    
+    [self startMainWindow];
+    
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;
@@ -52,4 +82,35 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+
+
+#pragma mark -
+#pragma GikoURLConnection connection fail
+- (void) showMessage:(id) view message:(NSString *) message {
+    if( !view ) {
+        return;
+    }
+    UIView *tmpView = nil;
+    if ( [view isKindOfClass:[UIView class]] ) {
+        tmpView = view;
+    }
+    
+    if( [view isKindOfClass:[UIViewController class]] ){
+        tmpView = ((UIViewController*)view).view;
+    }
+    
+    if( !tmpView ) {
+        return;
+    }
+    
+    MBProgressHUD *progress = [MBProgressHUD showHUDAddedTo:tmpView animated:YES];
+    [progress setLabelText:message];
+    progress.mode= MBProgressHUDModeCustomView;
+    progress.layer.masksToBounds = YES;
+    progress.layer.cornerRadius = 5.0f;
+    [progress hide:YES afterDelay:2];
+}
+- (void)connectdFail:(id<ASIHTTPRequestDelegate>) delegate {
+    [self showMessage:delegate message:@"网络连接失败"];
+}
 @end

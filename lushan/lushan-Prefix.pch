@@ -8,7 +8,40 @@
 #warning "This project uses features only available in iOS SDK 3.0 and later."
 #endif
 
+
+
+//#define API_URL @"https://192.168.1.203:5556/EMFS/unifiedAction.do"
+#define OBJ_LOADING @"obj_loading"
+//
+
+#define relase 1
+#ifdef relase
+
+#define CLIENTVERSION @"100000"
+#define API_URL @"https://27.115.85.78:5559/unifiedAction.do"
+#else
+
+#define CLIENTVERSION @"100000"
+#define API_URL @"https://192.168.1.203:5556/EMFS/unifiedAction.do"
+//#define API_URL @"https://58.247.170.42:5558/EMFS/unifiedAction.do"
+
+#endif
+
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+
+    #import <QuartzCore/QuartzCore.h>
+    #import "GikoViewController.h"
+
+    #import "models.h"
+
+    #import "Giko-Prefix.pch"
+
+    #import "GikoURLConnection.h"
+    #import "utils.h"
+
+    
+    #import "LSAppDelegate.h"
+
 #endif
